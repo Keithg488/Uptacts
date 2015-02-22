@@ -3,6 +3,7 @@ package com.example.keith_000.uptacts;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -11,51 +12,36 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.view.View.*;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private ListView lvPhone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.findViewById(R.id.fbbtn).setOnClickListener(new View.OnClickListener() {
+        lvPhone = (ListView)findViewById(R.id.listPhone);
 
-            @Override
-            public void onClick(View v) {
+        List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
+        listPhoneBook.add(new PhoneBook(BitmapFactory.decodeResource(getResources(), R.drawable.avatar_1), "Contact 1", "01987-254-254", "av1@gmail.com"));
+        listPhoneBook.add(new PhoneBook(BitmapFactory.decodeResource(getResources(), R.drawable.avatar_2), "Contact 2", "01877-245-123", "av2@gmail.com"));
+        listPhoneBook.add(new PhoneBook(BitmapFactory.decodeResource(getResources(), R.drawable.avatar_3), "Contact 3", "01784-254-124", "av3@gmail.com"));
 
-                startNewActivity("com.facebook.katana");
-            }
-        });
-
-    }
-
-    public void startNewActivity( String packageName)
-    {
-        Intent intent = MainActivity.this.getPackageManager().getLaunchIntentForPackage(packageName);
-        if (intent != null)
-        {
-            // we found the activity
-            // now start the activity
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }
-        else
-        {
-            // bring user to the market
-            // or let them choose an app?
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse("market://details?id="+packageName));
-            startActivity(intent);
-        }
+        PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
+        lvPhone.setAdapter(adapter);
     }
 
 
